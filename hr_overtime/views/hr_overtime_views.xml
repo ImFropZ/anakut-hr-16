@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record model="ir.ui.view" id="view_hr_overtime_tree">
+            <field name="name">hr.overtime.tree</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="employee_id" />
+                    <field name="overtime_hours" />
+                    <field name="state" />
+                    <field name="approver_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_hr_overtime_form">
+            <field name="name">hr.overtime.form</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <header>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,to_be_approve,approved" readonly="1"/>
+                </header>
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="employee_id" />
+                            <field name="date" />
+                            <field name="overtime_hours" widget="float_time" />
+                            <field name="need_second_approver" />
+                            <field name="approver_id" />
+                            <field name="second_approver_id"
+                                attrs="{'invisible': [('need_second_approver', '=', False)]}" />
+                            <field name="reason" />
+                        </group>
+                        <footer>
+                            <button string="Submit" type="object" name="action_submit"
+                                class="btn-primary" />
+                            <button string="Approve" type="object" name="action_approve"
+                                class="btn-success" states="to_be_approve" />
+                            <button string="Reject" type="object" name="action_reject"
+                                class="btn-danger" states="to_be_approve" />
+                            <button string="Reset to Draft" type="object"
+                                name="action_reset_to_draft" class="btn-secondary"
+                                states="rejected,approved" />
+                            <button string="Close" class="btn-secondary" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+
+</odoo>

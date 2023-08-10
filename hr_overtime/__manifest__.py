@@ -13,6 +13,7 @@
         'views/hr_overtime_views.xml',  # Your tree view definition
         'views/actions.xml',  # Your action definition
         'views/menu.xml',   # Your menu and menu item definitions
+        'views/res_config_settings_views.xml',
     ],
     'installable': True,
     'application': True,

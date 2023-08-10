@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.overtime</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20" />
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='companies']" position="after">
+                <h2>Overtime</h2>
+                <div class="row mt16 o_settings_container" id="product_general_settings">
+                    <div class="o_setting_box o_searchable_setting col-12 col-lg-6">
+                        <div class="o_setting_left_pane">
+                            <field name="need_second_approver" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="need_second_approver" />
+                            <div class="text-muted">
+                                Check if you are need second approver by default.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_setting_box o_searchable_setting col-12 col-lg-6">
+                        <div class="o_setting_right_pane">
+                            <div class="content-group">
+                                <label for="overtime_permission_tag_id" string="Tag"
+                                    class="col-3 col-lg-3 o_light_label" />
+                                <field name="overtime_permission_tag_id" />
+                                <div class="text-muted">
+                                    Give access to tag to edit the approver.
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <label for="overtime_approver_id" string="Approver"
+                                    class="col-3 col-lg-3 o_light_label" />
+                                <field name="overtime_approver_id" widget="many2one_avatar_user" />
+                                <div class="text-muted">
+                                    Set default approver.
+                                </div>
+                            </div>
+                            <div class="content-group"
+                                attrs="{'invisible': [('need_second_approver', '!=', True)]}">
+                                <label for="overtime_second_approver_id" string="Second Approver"
+                                    class="col-3 col-lg-3 o_light_label" />
+                                <field name="overtime_second_approver_id"
+                                    widget="many2one_avatar_user"
+                                />
+                                <div class="text-muted">
+                                    Set second default approver.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

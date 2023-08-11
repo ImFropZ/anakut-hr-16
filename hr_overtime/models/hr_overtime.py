@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError, UserError
 from lxml import etree
 
 class HrOvertime(models.Model):
@@ -31,6 +31,10 @@ class HrOvertime(models.Model):
     date = fields.Date("Date", default=lambda self: fields.Date.today())
     reason = fields.Text("Reason")
     
+    can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    can_reject = fields.Boolean('Can Reject', compute='_compute_can_reject')
+    
+    
     def action_submit(self):
         self.write({"state": "to_be_approve"})
     
@@ -61,4 +65,66 @@ class HrOvertime(models.Model):
                 raise ValidationError(_(
                     "The overtime hours must be greater than 0."
                 ))
+        
+    @api.depends("state")
+    def _compute_can_reject(self):
+        for hr_overtime in self:
+            if hr_overtime.state not in ('to_be_approve', 'to_be_second_approve'):
+                hr_overtime.write({"can_reject": False})
+                continue
+
+            try:
+                if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                    hr_overtime._check_approval_update()
+            except (AccessError, UserError):
+                hr_overtime.write({"can_reject": False})
+            else:
+                hr_overtime.write({"can_reject": True})
+
+    @api.depends("state")
+    def _compute_can_approve(self):
+        for hr_overtime in self:
+            if hr_overtime.state not in ('to_be_approve', 'to_be_second_approve'):
+                hr_overtime.write({"can_approve": False})
+                continue
+
+            try:
+                if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                    hr_overtime._check_approval_update()
+            except (AccessError, UserError):
+                hr_overtime.write({"can_approve": False})
+            else:
+                hr_overtime.write({"can_approve": True})
+    
+    """
+    Check if user is able to approve and reject or not
+
+    :return None
+    :exception: Fail to authenticate user will result error
+        - AccessError
+        - UserError
+    """
+    def _check_approval_update(self):
+        if self.env.is_superuser():
+            return
+        
+        current_employee = self.env.user
+
+        for hr_overtime in self:
+            approver = hr_overtime.approver_id
+            second_approver = hr_overtime.second_approver_id
+
+            if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                if hr_overtime.state == "to_be_approve":
+                    if current_employee.id != approver.id:
+                        raise UserError(_("You can not use this function."))
+                elif hr_overtime.state == "to_be_second_approve":
+                    if current_employee.id != second_approver.id:
+                        raise UserError(_("You can not use this function."))
+                else:
+                    raise AccessError(_("You can't access this function."))
+            else:
+                raise AccessError(_("You can't access this function."))
+
+
     

@@ -20,11 +20,11 @@
             <field name="model">hr.overtime</field>
             <field name="arch" type="xml">
                 <header>
-                    <button 
-                        string="Submit" 
-                        type="object" 
+                    <button
+                        string="Submit"
+                        type="object"
                         name="action_submit"
-                        class="btn-primary" 
+                        class="btn-primary"
                         states="draft"
                     />
                     <button
@@ -32,14 +32,14 @@
                         type="object"
                         name="action_approve"
                         class="btn-primary"
-                        states="to_be_approve,to_be_second_approve"
+                        attrs="{'invisible': [('can_approve', '=', False)]}"
                     />
                     <button
                         string="Reject"
                         type="object"
                         name="action_reject"
                         class="btn-primary"
-                        states="to_be_approve,to_be_second_approve"
+                        attrs="{'invisible': [('can_reject', '=', False)]}"
                     />
                     <button
                         string="Reset to Draft"
@@ -53,20 +53,26 @@
                         statusbar_visible="draft,to_be_approve,approved"
                         readonly="1" />
                 </header>
-                    <form>
-                        <sheet>
-                            <group>
-                                <field name="employee_id" />
-                                <field name="date" />
-                                <field name="overtime_hours" widget="float_time" />
-                                <field name="need_second_approver" />
-                                <field name="approver_id" />
-                                <field name="second_approver_id"
-                                    attrs="{'invisible': [('need_second_approver', '=', False)]}" />
-                                <field name="reason" />
-                            </group>
-                        </sheet>
-                    </form>
+                <form>
+                    <field name="can_approve" attrs="{'invisible': 1, 'readonly': 1}"/>
+                    <field name="can_reject" attrs="{'invisible': 1, 'readonly': 1}"/>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="overtime_hours" widget="float_time"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="need_second_approver"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="approver_id"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="second_approver_id"
+                                attrs="{'invisible': [('need_second_approver', '=', False)], 'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="reason" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
     </data>

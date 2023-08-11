@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Overtime User -->
+  <record id="group_user_overtime" model="ir.module.category">
+    <field name="name">User</field>
+    <field name="description">Set user able to config overtime.</field>
+    <field name="parent_id" ref="openeducat_core.module_category_all_openeducat" />
+  </record>
+  <!-- End -->
+
+  <!-- Overtime Admin -->
+  <record id="group_op_overtime" model="ir.module.category">
+    <field name="name">Administrator</field>
+    <field name="description">Set user able to config overtime.</field>
+    <field name="parent_id" ref="openeducat_core.module_category_all_openeducat" />
+  </record>
+
+  <!-- Teacher Group -->
+  <record id="group_school_teacher" model="res.groups">
+    <field name="name">Teacher</field>
+    <field name="category_id" ref="group_school_position" />
+  </record>
+  <!-- End -->
+
+</odoo>

@@ -6,7 +6,7 @@ class HrOvertime(models.Model):
     _name = "hr.overtime"
     _description = "Overtime Request"
     
-    employee_id = fields.Many2one("hr.employee", string="Employee", required=True)
+    employee_id = fields.Many2one("hr.employee", string="Employee", required=True, default=lambda self: self._get_current_user_employee())
     approver_id = fields.Many2one(
         "res.users", 
         string="Approver", 
@@ -33,6 +33,7 @@ class HrOvertime(models.Model):
     
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_reject = fields.Boolean('Can Reject', compute='_compute_can_reject')
+    can_edit = fields.Boolean("Can Edit", compute="_compute_can_edit")
     
     
     def action_submit(self):
@@ -66,6 +67,23 @@ class HrOvertime(models.Model):
                     "The overtime hours must be greater than 0."
                 ))
         
+    def _get_current_user_employee(self):
+        if self.env.is_superuser():
+            return
+        
+        return self.env.user.employee_id
+
+    @api.depends("state")
+    def _compute_can_edit(self):
+        for hr_overtime in self:
+            try:
+                hr_overtime._check_edition_update()
+            except(UserError):
+                hr_overtime.write({"can_edit": False})
+            else:
+                hr_overtime.write({"can_edit": True})
+
+
     @api.depends("state")
     def _compute_can_reject(self):
         for hr_overtime in self:
@@ -126,5 +144,13 @@ class HrOvertime(models.Model):
             else:
                 raise AccessError(_("You can't access this function."))
 
+    def _check_edition_update(self):
+        if self.env.is_superuser():
+            return
+        
+        is_admin = self.env.user.has_group('hr_overtime.group_op_overtime')
 
+        if not is_admin:
+            raise UserError(_(""))
+            
     

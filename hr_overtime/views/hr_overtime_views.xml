@@ -54,22 +54,33 @@
                         readonly="1" />
                 </header>
                 <form>
-                    <field name="can_approve" attrs="{'invisible': 1, 'readonly': 1}"/>
-                    <field name="can_reject" attrs="{'invisible': 1, 'readonly': 1}"/>
+                    <field name="can_approve" attrs="{'invisible': 1, 'readonly': 1}" />
+                    <field name="can_reject" attrs="{'invisible': 1, 'readonly': 1}" />
+                    <field name="can_edit" attrs="{'invisible': 1, 'readonly': 1}" />
                     <sheet>
                         <group>
-                            <field name="employee_id"
+                            <field 
+                                name="employee_id"
+                                attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
+                            <field 
+                                name="date" 
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="overtime_hours" widget="float_time"
+                            <field 
+                                name="overtime_hours" 
+                                widget="float_time"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="need_second_approver"
+                            <field 
+                                name="need_second_approver"
+                                attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
+                            <field 
+                                name="approver_id"
+                                attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
+                            <field 
+                                name="second_approver_id"
+                                attrs="{'invisible': [('need_second_approver', '=', False)], 'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
+                            <field 
+                                name="reason" 
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="approver_id"
-                                attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="second_approver_id"
-                                attrs="{'invisible': [('need_second_approver', '=', False)], 'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="reason" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                         </group>
                     </sheet>
                 </form>

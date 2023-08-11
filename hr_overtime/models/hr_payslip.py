@@ -12,6 +12,12 @@ class HrPayslipOvertime(models.Model):
                 record.total_overtime_hr = 0.0
                 continue
             
-            employee_obj = self.env['hr.overtime'].search([('employee_id', '=', record.employee_id.id)])
+            employee_obj = self.env['hr.overtime'].search([
+                ('employee_id', '=', record.employee_id.id),
+                ('date', '<=', record.date_to), 
+                ('date', '>=', record.date_from),
+                ('state', '=', 'approved')                
+            ])
+
             total_overtime = sum(employee_obj.mapped('overtime_hours'))
             record.total_overtime_hr = total_overtime

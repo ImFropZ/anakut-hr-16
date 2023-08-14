@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="menu_hr_overtime" name="Overtime Requests" sequence="10" action="action_hr_overtime"/>
+        <menuitem id="menu_hr_overtime" name="Overtime Requests" sequence="10"
+            action="action_hr_overtime" web_icon="hr_overtime,static/description/icon.png" />
     </data>
 </odoo>

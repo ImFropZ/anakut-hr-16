@@ -51,6 +51,10 @@ class HrOvertime(models.Model):
     def action_reset_to_draft(self):
         self.write({"state": "draft"})
 
+    def _get_default_permission_tag_id(self):
+        setting_obj = self.env['res.config.settings'].create({})
+        return setting_obj.get_overtime_permission_tag_id()
+
     def _get_default_approver_id(self):
         setting_obj = self.env['res.config.settings'].create({})
         return setting_obj.get_overtime_approver_id()
@@ -118,7 +122,7 @@ class HrOvertime(models.Model):
     Check if user is able to approve and reject or not
 
     :return None
-    :exception: Fail to authenticate user will result error
+    :exception: Fail to authenticate user will result in error
         - AccessError
         - UserError
     """
@@ -132,25 +136,51 @@ class HrOvertime(models.Model):
             approver = hr_overtime.approver_id
             second_approver = hr_overtime.second_approver_id
 
+            # Check if state is in the "to_be_approve" or "to_be_second_approve"
             if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                # If it's in the "to_be_approve", we will check it with approver
                 if hr_overtime.state == "to_be_approve":
                     if current_employee.id != approver.id:
                         raise UserError(_("You can not use this function."))
+                # If it's in the "to_be_second_approve", we will check it with second approver
                 elif hr_overtime.state == "to_be_second_approve":
                     if current_employee.id != second_approver.id:
                         raise UserError(_("You can not use this function."))
                 else:
                     raise AccessError(_("You can't access this function."))
+            # If the state is not satisfy, we will raise error
             else:
                 raise AccessError(_("You can't access this function."))
 
+    """
+    Check if user is able to edit the data or not
+
+    :return None
+    :exception: Fail to authenticate user will result in error
+        - AccessError
+        - UserError
+    """
     def _check_edition_update(self):
         if self.env.is_superuser():
             return
-        
+        """
+        Check if employee is an admin
+        If they are admin, they will have Admin Overtime group
+        """
         is_admin = self.env.user.has_group('hr_overtime.group_op_overtime')
-
-        if not is_admin:
-            raise UserError(_(""))
-            
+        if is_admin:
+            return    
+        """
+        Check if employee have permission to edit
+        Get the tag from setting and compare it to employee tag
+        """
+        employee_tag_objs = self.env.user.employee_id.category_ids
+        tag_obj = self._get_default_permission_tag_id()
+        for employee_tag in employee_tag_objs:
+            if employee_tag == tag_obj:
+                return
+        """
+        Will raise the error if any of the condition above doesn't satisfy
+        """
+        raise UserError(_(""))
     

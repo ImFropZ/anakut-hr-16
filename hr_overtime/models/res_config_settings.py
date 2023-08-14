@@ -33,7 +33,8 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_overtime_permission_tag_id(self):
         config_parameter_key = "hr_overtime.overtime_permission_tag_id"
-        return self.env["ir.config_parameter"].sudo().get_param(config_parameter_key)
+        id = self.env["ir.config_parameter"].sudo().get_param(config_parameter_key)
+        return self.env["hr.employee.category"].search([('id', '=', id)])
     
     @api.model
     def get_overtime_approver_id(self):

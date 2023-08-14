@@ -21,8 +21,8 @@ class HrOvertime(models.Model):
 
     state = fields.Selection([
         ("draft", "Draft"),
-        ("to_be_approve", "To Be Approved"),
-        ("to_be_second_approve", "To Be Second Approved"),
+        ("to_be_approved", "To Be Approved"),
+        ("to_be_second_approved", "To Be Second Approved"),
         ("approved", "Approved"),
         ("rejected", "Rejected")
     ], string="Status", default="draft", track_visibility="onchange", required=True)
@@ -37,11 +37,11 @@ class HrOvertime(models.Model):
     
     
     def action_submit(self):
-        self.write({"state": "to_be_approve"})
+        self.write({"state": "to_be_approved"})
     
     def action_approve(self):
-        if self.need_second_approver and self.state == 'to_be_approve':
-            self.write({"state": "to_be_second_approve"})
+        if self.need_second_approver and self.state == 'to_be_approved':
+            self.write({"state": "to_be_second_approved"})
         else:
             self.write({"state": "approved"})
     
@@ -91,12 +91,12 @@ class HrOvertime(models.Model):
     @api.depends("state")
     def _compute_can_reject(self):
         for hr_overtime in self:
-            if hr_overtime.state not in ('to_be_approve', 'to_be_second_approve'):
+            if hr_overtime.state not in ('to_be_approved', 'to_be_second_approved'):
                 hr_overtime.write({"can_reject": False})
                 continue
 
             try:
-                if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                if hr_overtime.state in ('to_be_approved', 'to_be_second_approved'):
                     hr_overtime._check_approval_update()
             except (AccessError, UserError):
                 hr_overtime.write({"can_reject": False})
@@ -106,12 +106,12 @@ class HrOvertime(models.Model):
     @api.depends("state")
     def _compute_can_approve(self):
         for hr_overtime in self:
-            if hr_overtime.state not in ('to_be_approve', 'to_be_second_approve'):
+            if hr_overtime.state not in ('to_be_approved', 'to_be_second_approved'):
                 hr_overtime.write({"can_approve": False})
                 continue
 
             try:
-                if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+                if hr_overtime.state in ('to_be_approved', 'to_be_second_approved'):
                     hr_overtime._check_approval_update()
             except (AccessError, UserError):
                 hr_overtime.write({"can_approve": False})
@@ -137,13 +137,13 @@ class HrOvertime(models.Model):
             second_approver = hr_overtime.second_approver_id
 
             # Check if state is in the "to_be_approve" or "to_be_second_approve"
-            if hr_overtime.state in ('to_be_approve', 'to_be_second_approve'):
+            if hr_overtime.state in ('to_be_approved', 'to_be_second_approved'):
                 # If it's in the "to_be_approve", we will check it with approver
-                if hr_overtime.state == "to_be_approve":
+                if hr_overtime.state == "to_be_approved":
                     if current_employee.id != approver.id:
                         raise UserError(_("You can not use this function."))
                 # If it's in the "to_be_second_approve", we will check it with second approver
-                elif hr_overtime.state == "to_be_second_approve":
+                elif hr_overtime.state == "to_be_second_approved":
                     if current_employee.id != second_approver.id:
                         raise UserError(_("You can not use this function."))
                 else:

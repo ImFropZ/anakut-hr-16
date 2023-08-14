@@ -19,4 +19,18 @@
         <field name="category_id" ref="group_overtime" />
         <field name="implied_ids" eval="[(4, ref('group_user_overtime'))]" />
     </record>
+
+    <record id="user_overtime" model="ir.rule">
+        <field name="name">Overtime User Rule</field>
+        <field name="model_id" ref="model_hr_overtime"/>
+        <field name="groups" eval="[(4, ref('hr_overtime.group_user_overtime'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="op_overtime" model="ir.rule">
+        <field name="name">Overtime Admin Rule</field>
+        <field name="model_id" ref="model_hr_overtime"/>
+        <field name="groups" eval="[(4, ref('hr_overtime.group_op_overtime'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
 </odoo>

@@ -15,6 +15,24 @@
             </field>
         </record>
 
+        <record id="view_hr_overtime_filter" model="ir.ui.view">
+            <field name="name">hr.overtime.select</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <search string="Search Overtimes">
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"
+                        help="Draft Overtimes" />
+                    <filter string="Need Approve" name="draft"
+                        domain="[('state', 'in', ['to_be_approved', 'to_be_second_approved'])]"
+                        help="Need Approve Overtimes" />
+                    <filter string="Approved" name="draft" domain="[('state', '=', 'approved')]"
+                        help="Approved Overtimes" />
+                    <filter string="Rejected" name="draft" domain="[('state', '=', 'rejected')]"
+                        help="Rejected Overtimes" />
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_hr_overtime_form">
             <field name="name">hr.overtime.form</field>
             <field name="model">hr.overtime</field>
@@ -50,7 +68,7 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,to_be_approve,approved"
+                        statusbar_visible="draft,to_be_approved,approved"
                         readonly="1" />
                 </header>
                 <form>
@@ -59,27 +77,27 @@
                     <field name="can_edit" attrs="{'invisible': 1, 'readonly': 1}" />
                     <sheet>
                         <group>
-                            <field 
+                            <field
                                 name="employee_id"
                                 attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
-                            <field 
-                                name="date" 
+                            <field
+                                name="date"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field 
-                                name="overtime_hours" 
+                            <field
+                                name="overtime_hours"
                                 widget="float_time"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field 
+                            <field
                                 name="need_second_approver"
                                 attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
-                            <field 
+                            <field
                                 name="approver_id"
                                 attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
-                            <field 
+                            <field
                                 name="second_approver_id"
                                 attrs="{'invisible': [('need_second_approver', '=', False)], 'readonly': ['|', ('state', '!=', 'draft'), ('can_edit', '=', False)]}" />
-                            <field 
-                                name="reason" 
+                            <field
+                                name="reason"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" />
                         </group>
                     </sheet>

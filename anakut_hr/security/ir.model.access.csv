@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employees_employee,hr_employees_employee,hr.model_hr_employee,group_employee_employees,1,0,0,0
+access_hr_employees_manager,hr_employees_manager,hr.model_hr_employee,group_manager_employees,1,1,1,1
+access_hr_payslip_employee,hr_payslip_employee,hr_payroll.model_hr_payslip,group_employee_employees,1,0,0,0
+access_hr_payslip_manager,hr_payslip_manager,hr_payroll.model_hr_payslip,group_manager_employees,1,0,0,0

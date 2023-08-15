@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee Group -->
+    <record id="group_employee_employees" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees" />
+    </record>
+
+    <!-- Manager Group -->
+    <record id="group_manager_employees" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees" />
+        <field name="implied_ids" eval="[(4, ref('group_employee_employees'))]" />
+    </record>
+</odoo>

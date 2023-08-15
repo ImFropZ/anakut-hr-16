@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="hr_payroll.menu_hr_payroll_rootmenu_hr_payroll_root"
+        name="Payroll" sequence="195"
+        groups="anakut_hr.group_employee_employees,anakut_hr.group_manager_employees" />
+
+    <menuitem id="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        name="Payroll" sequence="195"
+        groups="anakut_hr.group_employee_employees,anakut_hr.group_manager_employees" />
+
+    <!-- <menuitem
+        id="hr_payroll.menu_hr_payroll_work_entries_root"
+        name="Work Entries"
+        sequence="60"
+        groups="hr_payroll.group_hr_payroll_manager" />
+
+    <menuitem
+        id="hr_payroll.hr_menu_all_contracts"
+        name="Contracts"
+        action="hr_contract.action_hr_contract"
+        parent="hr_payroll.menu_hr_payroll_employees_root"
+        groups="hr_payroll.group_hr_payroll_manager"
+        sequence="30" />
+
+    <menuitem
+        id="hr_payroll.menu_hr_payroll_payslips"
+        name="Payslips"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        sequence="70"
+        groups="anakut_hr.group_employee_employees,anakut_hr.group_manager_employees" />
+    -->
+
+    <menuitem
+        id="hr_payroll.menu_hr_payroll_employee_payslips"
+        name="All Payslips"
+        parent="hr_payroll.menu_hr_payroll_payslips"
+        sequence="60"
+        action="hr_payroll.action_view_hr_payslip_month_form"
+        groups="anakut_hr.group_employee_employees,anakut_hr.group_manager_employees" />
+</odoo>

@@ -12,4 +12,18 @@
         <field name="category_id" ref="base.module_category_human_resources_employees" />
         <field name="implied_ids" eval="[(4, ref('group_employee_employees'))]" />
     </record>
+
+    <record id="employee_payslip_rule" model="ir.rule">
+        <field name="name">Employee Payslip Rule</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('anakut_hr.group_employee_employees'))]" />
+    </record>
+
+    <record id="manager_payslip_rule" model="ir.rule">
+        <field name="name">Manager Payslip Rule</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('anakut_hr.group_manager_employees'))]" />
+    </record>
 </odoo>

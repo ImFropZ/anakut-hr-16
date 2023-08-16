@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -19,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="hr_overtime.overtime_approvor"
     )
 
-    need_second_approver = fields.Boolean(
+    overtime_need_second_approver = fields.Boolean(
         "Need second approver?", 
         default=False, 
         config_parameter="hr_overtime.need_second_approver"
@@ -29,6 +30,16 @@ class ResConfigSettings(models.TransientModel):
         string="Second Approver",
         config_parameter="hr_overtime.overtime_second_approvor"
     )
+
+    @api.constrains("overtime_approver_id", "overtime_second_approver_id")
+    def _check_duplicate_approver(self):
+        for res_config_setting in self:
+            if not res_config_setting.overtime_approver_id or not res_config_setting.overtime_second_approver_id:
+                continue
+
+            if res_config_setting.overtime_approver_id == res_config_setting.overtime_second_approver_id:
+                raise ValidationError(_("Approver can't be the same users."))
+
 
     @api.model
     def get_overtime_permission_tag_id(self):
@@ -51,4 +62,6 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_overtime_second_approver_id(self):
         config_parameter_key = "hr_overtime.overtime_second_approvor"
-        return self.env["ir.config_parameter"].sudo().get_param(config_parameter_key)
+
+        id = self.env["ir.config_parameter"].sudo().get_param(config_parameter_key)
+        return self.env["res.users"].search([('id', '=', id)])

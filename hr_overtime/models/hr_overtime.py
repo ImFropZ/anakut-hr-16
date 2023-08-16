@@ -16,8 +16,13 @@ class HrOvertime(models.Model):
 
     need_second_approver = fields.Boolean(
         "Need Second Approver", 
-        default=lambda self: self._get_default_need_second_approver() or False)
-    second_approver_id = fields.Many2one("res.users", string="Second Approver")
+        default=lambda self: self._get_default_need_second_approver() or False
+    )
+    second_approver_id = fields.Many2one(
+        "res.users", 
+        string="Second Approver", 
+        default=lambda self:self._get_default_second_approver() or False
+    )
 
     state = fields.Selection([
         ("draft", "Draft"),
@@ -62,6 +67,19 @@ class HrOvertime(models.Model):
     def _get_default_need_second_approver(self):
         setting_obj = self.env['res.config.settings'].create({})
         return setting_obj.get_need_second_approver()
+    
+    def _get_default_second_approver(self):
+        setting_obj = self.env['res.config.settings'].create({})
+        return setting_obj.get_overtime_second_approver_id()
+
+    @api.constrains("approver_id", "second_approver_id")
+    def _check_duplicate_approver(self):
+        for hr_overtime in self:
+            if not hr_overtime.approver_id or not hr_overtime.second_approver_id:
+                continue
+
+            if hr_overtime.approver_id == hr_overtime.second_approver_id:
+                raise ValidationError(_("Approver can't be the same users."))
     
     @api.constrains('overtime_hours')
     def _check_overtime_hours(self):

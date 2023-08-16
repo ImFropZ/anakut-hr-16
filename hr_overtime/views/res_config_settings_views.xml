@@ -11,10 +11,10 @@
                 <div class="row mt16 o_settings_container" id="product_general_settings">
                     <div class="o_setting_box o_searchable_setting col-12 col-lg-6">
                         <div class="o_setting_left_pane">
-                            <field name="need_second_approver" />
+                            <field name="overtime_need_second_approver" />
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="need_second_approver" />
+                            <label for="overtime_need_second_approver" />
                             <div class="text-muted">
                                 Check if you are need second approver by default.
                             </div>
@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="content-group"
-                                attrs="{'invisible': [('need_second_approver', '!=', True)]}">
+                                attrs="{'invisible': [('overtime_need_second_approver', '!=', True)]}">
                                 <label for="overtime_second_approver_id" string="Second Approver"
                                     class="col-3 col-lg-3 o_light_label" />
                                 <field name="overtime_second_approver_id"

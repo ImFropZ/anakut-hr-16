@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mission Form User -->
+    <record id="group_mission_form" model="ir.module.category">
+        <field name="name">Mission Form</field>
+        <field name="description">Set the position for your users.</field>
+        <field name="parent_id" ref="base.module_category_human_resources" />
+    </record>
+
+    <!-- User Group -->
+    <record id="group_user_mission_form" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="group_mission_form" />
+    </record>
+
+    <!-- Admin Group -->
+    <record id="group_op_mission_form" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="group_mission_form" />
+        <field name="implied_ids" eval="[(4, ref('group_user_mission_form'))]" />
+    </record>
+
+    <!-- <record id="user_mission_form" model="ir.rule">
+        <field name="name">Mission Form User Rule</field>
+        <field name="model_id" ref="model_hr_mission_form" />
+        <field name="groups" eval="[(4, ref('hr_overtime.group_user_mission_form'))]" />
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="op_mission_form" model="ir.rule">
+        <field name="name">Mission Form Admin Rule</field>
+        <field name="model_id" ref="model_hr_mission_form" />
+        <field name="groups" eval="[(4, ref('hr_overtime.group_op_mission_form'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record> -->
+</odoo>

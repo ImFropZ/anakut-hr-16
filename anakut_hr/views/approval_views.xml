@@ -23,7 +23,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Category" name="group_by_category_id"
                         context="{'group_by': 'category_id'}" />
-                    <filter string="Monthly" name="group_by_monthly"
+                    <filter string="Date" name="group_by_date"
                         context="{'group_by': 'date:month'}" />
                 </group>
             </xpath>

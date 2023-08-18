@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_approval_tree_inherited" model="ir.ui.view">
+        <field name="name">approval.request.tree.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="amount" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_approval_search_inherited" model="ir.ui.view">
+        <field name="name">approval.request.search.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_search_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Approved" name="filter_status_approved"
+                    domain="[('request_status', '=', 'approved')]" />
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_by_category_id"
+                        context="{'group_by': 'category_id'}" />
+                    <filter string="Monthly" name="group_by_monthly"
+                        context="{'group_by': 'date:month'}" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
